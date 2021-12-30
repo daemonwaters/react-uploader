@@ -5,6 +5,7 @@ import ProgressBar from "./ProgressBar";
 import { storage, getDownloadURL, ref, uploadBytesResumable } from "../config";
 import Success from "./Success";
 import Failed from "./Failed";
+import putToDataBase from "./putToDataBase";
 
 const UploadWrapper = styled.div`
   display: flex;
@@ -36,7 +37,7 @@ const UploadWrapper = styled.div`
   }
 `;
 
-function Upload({ setUrls,urls}) {
+function Upload({ urls }) {
   const [progress, setProgress] = useState(0);
   const [succes, setSucces] = useState(undefined);
   const validTypes = ["image/jpeg", "image/jpg", "image/png"];
@@ -50,6 +51,7 @@ function Upload({ setUrls,urls}) {
         "state_changed",
         (snapshot) => {
           const prog = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          //keep track of progress of the uploaded file
           setProgress(prog);
         },
         (err) => {
@@ -59,7 +61,7 @@ function Upload({ setUrls,urls}) {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((url) => {
             setProgress(0);
-            setUrls([...urls, url]);
+            putToDataBase(url);
             setSucces(true);
           });
         }

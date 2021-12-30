@@ -15,12 +15,14 @@ const GridWrapper = styled.div`
   gap: 0.5rem;
 `;
 
-function Grid({urls}) {
+function Grid({ urls }) {
   return (
     <GridWrapper>
-      {urls.map((url, index) => {
-        return <Img src={url} key={index} alt={`${index + url}`} />;
-      })}
+      {urls
+        .sort((a, b) => b.uploadTime - a.uploadTime)
+        .map((item, index) => {
+          return <Img src={item.url} key={index} alt={`pic-${index}`} />;
+        })}
     </GridWrapper>
   );
 }
